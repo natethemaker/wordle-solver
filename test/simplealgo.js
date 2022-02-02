@@ -1,7 +1,7 @@
 var Solver = require("../Solver")
 
 var fs = require("fs")
-var list = fs.readFileSync("./wordlist.txt").toString().split("\n")
+var wordli
 
 function trysolve(word) { 
 

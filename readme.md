@@ -61,6 +61,10 @@ Would be written as:
 
 This will log an array with the remaining possible words.
 
-## Todo
+You can also find the best guess with :
 
-- Rank words in wordlist based on probability
+```
+solver.findBestGuess() //tares
+```
+
+ This basically assigns each word a weight and returns the highest weighted word. To find a weight, it finds the counts of all letters in all positions, then sorts by the most to least common letters in each position, ignoring a certain position if you already have it correct. It also uses a position frequency object to give guesses that are in common positions with other words more weight.
