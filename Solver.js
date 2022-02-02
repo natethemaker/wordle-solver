@@ -3,14 +3,11 @@ var wordlist = require("wordle-wordlist")
 
 var letterArray = "abcdefghijklmnopqrstuvwxyz".split("")
 
+
 class Solver {
 
   constructor() {
     this.wordlist = [];
-    this.letterBlacklist = [];
-    this.whitelistedLettersAtWrongPosition = {1: [], 2: [], 3: [], 4: [], 5: []};
-    this.letterWhitelist = [];
-    this.whitelistedLettersAtRitPosition = {};
     this.guess = 0;
   }
 
@@ -83,6 +80,9 @@ findBestGuess() {
 
     if(this.wordlist.length < 1) throw new Error("Wordlist is empty. Did you forget to populate with Solver.populate()?")
 
+const counter = s => [...s].reduce((a, c) => (a[c] = a[c] + 1 || 1) && a, {})
+var nobstr = ""
+
     for(var i=0; i<5; i++) {
       var out = output.charAt(i)
       var guesslet = guess.charAt(i)
@@ -91,8 +91,20 @@ findBestGuess() {
 
       if(out == "y") this.wordlist = this.wordlist.filter(e=>e.charAt(i) != guesslet &&e.includes(guesslet))
 
-      if(out == "b") this.wordlist = this.wordlist.filter(e=>!e.includes(guesslet))
+      if(out != "b") nobstr += guesslet
+
+    //  if(out == "b") 
     }
+    var counted = counter(nobstr)
+        for(var i=0; i<5; i++) {
+      var out = output.charAt(i)
+      var guesslet = guess.charAt(i)
+
+      if(out == "b") {
+        if(!counted.hasOwnProperty(guesslet)) this.wordlist = this.wordlist.filter(e=>!e.includes(guesslet))
+        
+      }
+  }
   }
   
   guess(word, guess) {
