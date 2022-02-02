@@ -1,6 +1,6 @@
 {
   "name": "wordle-solver",
-  "version": "1.0.3c",
+  "version": "1.0.3d",
   "description": "This is a simple wordle helper / solver.",
   "main": "index.js",
   "scripts": {
@@ -11,6 +11,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "wordle-wordlist": "^1.0.0-a"
+    "wordle-wordlist": "^1.0.1-b"
   }
 }
