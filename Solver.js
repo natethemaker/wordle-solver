@@ -6,6 +6,7 @@ var letterArray = "abcdefghijklmnopqrstuvwxyz".split("")
 class Solver {
 
   constructor() {
+    this.wordlist = [];
     this.letterBlacklist = [];
     this.whitelistedLettersAtWrongPosition = {1: [], 2: [], 3: [], 4: [], 5: []};
     this.letterWhitelist = [];
@@ -22,6 +23,8 @@ findWeight(guess, freq, occur) {
 }
 
 findBestGuess() {
+      if(this.wordlist.length < 1) throw new Error("Wordlist is empty. Did you forget to populate with Solver.populate()?")
+
   let bestGuess;
   let neededWeight = Number.MIN_VALUE; 
 
@@ -77,6 +80,9 @@ findBestGuess() {
   }
 
   filter(guess, output) {
+
+    if(this.wordlist.length < 1) throw new Error("Wordlist is empty. Did you forget to populate with Solver.populate()?")
+
     for(var i=0; i<5; i++) {
       var out = output.charAt(i)
       var guesslet = guess.charAt(i)
