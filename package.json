@@ -1,7 +1,7 @@
 {
   "name": "wordle-solver",
-  "version": "1.0.3b",
-  "description": "",
+  "version": "1.0.3c",
+  "description": "This is a simple wordle helper / solver.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",

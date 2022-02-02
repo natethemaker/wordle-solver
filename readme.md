@@ -1,10 +1,11 @@
 # Wordle Solver
 
-![npm](https://img.shields.io/npm/dt/wordle-solver.png)
-
 
 This is a simple wordle helper / solver.
 
+![npm](https://img.shields.io/npm/dt/wordle-solver.png)
+
+![npm](https://img.shields.io/npm/dm/wordle-solver.png)
 
 ## Usage
 
