@@ -3,6 +3,10 @@
 
 This is a simple wordle helper / solver.
 
+This is still in development, so expect breaking changes with every update.
+
+This module comes with 2 algorithms, both very good at solving wordle.
+
 ![npm](https://img.shields.io/npm/dt/wordle-solver.png)
 
 ![npm](https://img.shields.io/npm/dm/wordle-solver.png)
@@ -15,7 +19,7 @@ First install the package
 npm i wordle-solver
 ```
 
-Then import the Solver class, it's  a helper for filtering out words.
+Then import the Solver class, it's what does all the heavy lifting.
 
 ```
 var Solver = require("wordle-solver")
@@ -27,16 +31,9 @@ Create a new instance of it.
 var solver = new Solver()
 ```
 
-If you want to fetch the current wordlist automatically, do
-```
-solver.populate(type)
-```
-type is a string, and it can be "guesses", "all", or "answers"
+This will automatically create a new Solver and populate it with the latest wordlist. 
 
-this function returns a promise, so make sure to use it in an async function or use `then` and `catch` to handle when its completed.
-
-
-If you want to, you can access or modify the current wordlist by doing:
+If you ever want to modify or look at the wordlist, you can use:
 
 ```
 solver.wordlist
@@ -46,7 +43,7 @@ Now, for the cool part
 You can filter the wordlist by doing:
 
 ```
-solver.filter(word, output)
+solver.guess(word, output)
 ```
 `word` is a string containing the 5 letter word that was guessed.
 
@@ -64,12 +61,64 @@ Would be written as:
 
 This will log an array with the remaining possible words.
 
-You can also find the best guess with :
+## filtering the wordlist
+
+For your convenience, this module offers an easy way to get the possible solutions based on your previous guesses. 
+
+You can retrieve this with:
 
 ```
-solver.findBestGuess() //returns string
+solver.getPossibleWords() //returns array
 ```
+If you want to find the best guess to play, keep reading.
 
- This basically assigns each word a weight and returns the highest weighted word. To find a weight, it finds the counts of all letters in all positions, then sorts by the most to least common letters in each position, ignoring a certain position if you already have it correct. It also uses a position frequency object to give guesses that are in common positions with other words more weight.
+## solving the puzzle
 
- 
+like I mentioned before, this module comes with 2 different wordle solving algorithms. 
+
+i will explain how to use both below
+
+### latest algorithm:
+
+this was an algorithm i saw, inspired from Max Kreminski. I ported it to work with this module. it's able to solve most words pretty quickly.
+
+To find the next best guess at any given state:
+
+```
+solver.getNextBestGuess()
+```
+This will return a string containing the best next word to play. 
+
+You can also get an array of the best guesses, sorted from best to least, with:
+
+```
+solver.getNextBestGuesses(n)
+```
+In the above example, n is the number of guesses to fetch. If you wanted the top 10 guesses, you would put 10 instead of n.
+
+
+### old algorithm:
+
+this was the first algorithm I created. it works by assigning weights based by probability. it isn't that good but you can still use it nevertheless.
+
+To find the next best guess at any given state:
+
+```
+solver.nextOldSolver()
+```
+This will return a string containing the best next word to play. 
+
+You can also get an array of good guesses, sorting from best to least, with:
+
+```
+solver.oldSolver(n)
+```
+In the above example, n is the number of guesses to fetch. If you wanted the top 10 guesses, you would put 10 instead of n.
+
+## contributing
+
+if you find this useful, please leave a star on github!
+
+if you find any bugs with this, please open an issue.
+
+you can also submit a pull request to add new features!
