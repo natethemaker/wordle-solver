@@ -1,10 +1,9 @@
 var Solver = require("../Solver")
 var solver = new Solver();
-console.log(solver.nextOldSolver())
-console.log(solver.getNextBestGuess())
-solver.guess("arose", "bbgbb")
-console.log(solver.nextOldSolver())
-console.log(solver.getNextBestGuess())
-solver.guess("cloth", "bbgbb")
-console.log(solver.nextOldSolver())
-console.log(solver.getNextBestGuess())
+
+solver.guess("arose", "bybby");
+solver.guess("tired", "bbygb");
+solver.guess("ruler", "gbygb");
+solver.guess("refel", "ggbgg");
+solver.guess("repel", "ggbgg");
+console.log(solver.getNextBestGuess());
