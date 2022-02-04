@@ -5,7 +5,7 @@ This is a simple wordle helper / solver.
 
 This is still in development, so expect breaking changes with every update.
 
-This module comes with 2 algorithms, both very good at solving wordle.
+This module comes with 3 algorithms, all very good at solving wordle.
 
 ![npm](https://img.shields.io/npm/dt/wordle-solver.png)
 
@@ -74,9 +74,19 @@ If you want to find the best guess to play, keep reading.
 
 ## solving the puzzle
 
-like I mentioned before, this module comes with 2 different wordle solving algorithms. 
+like I mentioned before, this module comes with 3 different wordle solving algorithms. 
 
-i will explain how to use both below
+i will explain how to use them below
+
+### experimental algorithm:
+
+this is an algorithm inspired by Tom Neil. it's pretty good but it's not fully completed yet. i don't think i will ever get to completing it.
+
+To find the next best guess at any given state:
+
+```
+solver.nextBestv3()
+```
 
 ### latest algorithm:
 

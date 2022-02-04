@@ -5,6 +5,104 @@ var topwords = ["about","other","which","their","there","first","would","these",
 
 const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
 
+const matchesFilters = (wordList, filters) => {
+  return wordList.filter((word) => {
+    let match = true;
+    for (let i = 0; i < filters.length; i += 1) {
+      const { colour, position, letter } = filters[i];
+      if (colour === "black") {
+        if (word.includes(letter)) {
+          match = false;
+          break;
+        }
+      }
+      if (colour === "green") {
+        if (word[position] !== letter) {
+          match = false;
+          break;
+        }
+      }
+      if (colour === "yellow") {
+        if (!word.includes(letter) || word[position] === letter) {
+          match = false;
+          break;
+        }
+      }
+    }
+    return match;
+  });
+};
+
+
+const colours = ["green", "yellow", "black"];
+
+const calculateLetterColor = (wordList, letter, position, colour) => {
+  const matchingWords = matchesFilters(wordList, [
+    { colour, position, letter },
+  ]);
+  return {
+    p: (matchingWords.length * 1.0) / wordList.length,
+    list: matchingWords,
+  };
+};
+
+const createObject = (word, obj, depth) => {
+  // Recursively create decision tree structure
+  if (depth > 4) {
+    return obj;
+  } else {
+    // For each colour, add probabilities and new lists
+    colours.forEach((colour) => {
+      if (!obj[colour] && obj.list.length > 0) {
+        obj[colour] = calculateLetterColor(
+          obj.list,
+          word[depth],
+          depth,
+          colour
+        );
+      }
+    });
+    const newDepth = depth + 1;
+    colours.forEach((colour) => {
+      if (obj.list.length > 0) {
+        createObject(word, obj[colour], newDepth);
+      }
+    });
+  }
+};
+
+const fillInObject = (word, originalList) => {
+  let depth = 0;
+  let composedObj = { list: originalList, p: 1 };
+  createObject(word, composedObj, depth);
+  return composedObj;
+};
+
+const calculateP = (arr, obj, p, depth) => {
+  colours.forEach((colour) => {
+    if (obj[colour] && obj[colour].list.length > 0) {
+      // console.log({ p: obj.p * p, depth });
+      if (depth === 4) {
+        arr.push(obj[colour].p * p);
+      } else {
+        calculateP(arr, obj[colour], obj[colour].p * p, depth + 1);
+      }
+    }
+  });
+};
+
+const calculateWordScore = (obj, word) => {
+  // Go through each branch in tree to multiply probabilities
+  // Square each probability and add to array
+  // Return the sum of the array
+  const pValues = [];
+  const depth = 0;
+  calculateP(pValues, obj, 1, depth);
+  const pSquared = pValues.map((value) => value * value);
+  const score = pSquared.reduce((pv, cv) => pv + cv, 0);
+  return score;
+};
+
 function test(word, constraint) {
   if (constraint[0] === "notInWord") return !word.includes(constraint[1]);
   if (constraint[0] === "notAtPos") {
@@ -113,6 +211,64 @@ class Solver {
     return this.oldSolver(1)[0];
 
   }
+
+
+  getFiltersv3() {
+    var filters = [];
+
+    this.constraints.forEach((e) => {
+      if(e[0] == "notInWord") filters.push({colour: "black", letter: e[1]})
+
+      else if(e[0] == "atPos") filters.push({colour: "green", letter: e[2], position: e[1]})
+      else if(e[0] == "notAtPos") filters.push({colour: "yellow", letter: e[2], position: e[1]})
+    })
+    return filters;
+  }
+
+
+ nextBestv3()  {
+
+   var filters = this.getFiltersv3()
+   if(filters.length == 0) return "raise"
+  const filteredList = matchesFilters( wordlist.cache.answers, [...filters]);
+  let usedList = wordlist.cache.answers
+
+  let minScore = 1;
+  let minWord = usedList[0];
+
+  if (filteredList.length === 1) {
+    return filteredList[0]
+  } else if (filteredList.length < 4) {
+    // Start guessing potential words to see if you get lucky
+    usedList = filteredList;
+    for (let i = 1; i < usedList.length; i += 1) {
+      const oneWordObj = fillInObject(usedList[i], filteredList);
+      const score = calculateWordScore(oneWordObj, usedList[i]);
+      if (score < minScore) {
+        minScore = score;
+        minWord = usedList[i];
+      }
+    }
+    return  minWord
+  } else {
+  var sameScore = [];
+    for (let i = 0; i < usedList.length; i += 1) {
+     
+      const oneWordObj = fillInObject(usedList[i], filteredList);
+      const score = calculateWordScore(oneWordObj, usedList[i]);
+      if (score <= minScore) {
+        minScore = score;
+        sameScore.push({word: usedList[i], score: score});
+      } 
+  
+    }
+    
+
+    sameScore = sameScore.filter((s) => s.score == minScore)
+      
+    return sameScore[~~(Math.random() * sameScore.length)].word;
+  }
+}
 
   findWeight(guess, freq, occur) {
     let weight = 0;

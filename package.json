@@ -1,6 +1,6 @@
 {
   "name": "wordle-solver",
-  "version": "1.0.5b",
+  "version": "1.0.6",
   "description": "This is a simple wordle helper / solver.",
   "main": "index.js",
   "scripts": {
